@@ -1,0 +1,26 @@
+{
+"One":
+  {
+    "Precision": 1,
+    "Resolution": [32, 32, 32],
+    "Coverage": [70, 70, 70],
+    "Shape": "sphere",
+    "numBodies": 8,
+    "dimBodies": [4, 4, 4],
+    "randomBodyLayout": 2,
+    "Frequency": [10, 10, 10],
+    "Magnitude": [0.3, 0.3, 0.3]
+  },
+"Two":
+  {
+    "Precision": 1,
+    "Resolution": [32, 32, 32],
+    "Coverage": [75, 75, 75],
+    "Shape": "sphere",
+    "numBodies": 8,
+    "dimBodies": [4, 4, 4],
+    "randomBodyLayout": 2,
+    "Frequency": [10, 10, 10],
+    "Magnitude": [0.3, 0.3, 0.3]
+  }
+}
