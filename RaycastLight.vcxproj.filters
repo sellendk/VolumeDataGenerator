@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Distribution Files">
+      <UniqueIdentifier>{B83CAF91-C7BF-462F-B76C-EA11631F866C}</UniqueIdentifier>
+      <Extensions>*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Distribution Files">
+      <UniqueIdentifier>{B83CAF91-C7BF-462F-B76C-EA11631F866C}</UniqueIdentifier>
+      <Extensions>*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="renderHeader">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="renderSource">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="generateSource">
+      <UniqueIdentifier>{bc591826-67f2-4977-bb25-03d2dd7612b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="generateHeader">
+      <UniqueIdentifier>{2003ac4f-f098-4214-b8e4-3025d7bb1649}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GeneratedFiles\qrc_kernels.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderSource\colorutils.cpp">
+      <Filter>renderSource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderSource\colorwheel.cpp">
+      <Filter>renderSource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderSource\datrawreader.cpp">
+      <Filter>renderSource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderSource\hoverpoints.cpp">
+      <Filter>renderSource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderSource\main.cpp">
+      <Filter>renderSource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderSource\mainwindow.cpp">
+      <Filter>renderSource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderSource\openclglutilities.cpp">
+      <Filter>renderSource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderSource\openclutilities.cpp">
+      <Filter>renderSource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderSource\transferfunctionwidget.cpp">
+      <Filter>renderSource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderSource\volumerendercl.cpp">
+      <Filter>renderSource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderSource\volumerenderwidget.cpp">
+      <Filter>renderSource</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_colorwheel.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_colorwheel.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_hoverpoints.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_hoverpoints.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_mainwindow.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_mainwindow.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_transferfunctionwidget.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_transferfunctionwidget.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_volumerenderwidget.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_volumerenderwidget.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\generateSource\datagenerator.cpp">
+      <Filter>generateSource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\generateSource\frequency.cpp">
+      <Filter>generateSource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\generateSource\getSetData.cpp">
+      <Filter>generateSource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\generateSource\Perlin.cpp">
+      <Filter>generateSource</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GeneratedFiles\ui_mainwindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="header\renderHeader\colorutils.h">
+      <Filter>renderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="header\renderHeader\datrawreader.h">
+      <Filter>renderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="header\renderHeader\openclglutilities.h">
+      <Filter>renderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="header\renderHeader\openclutilities.h">
+      <Filter>renderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="header\renderHeader\volumerendercl.h">
+      <Filter>renderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="header\generateHeader\datagenerator.hpp">
+      <Filter>generateHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="header\generateHeader\exprtk.hpp">
+      <Filter>generateHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="header\generateHeader\frequency.hpp">
+      <Filter>generateHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="header\generateHeader\getSetData.hpp">
+      <Filter>generateHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="header\generateHeader\json.hpp">
+      <Filter>generateHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="header\generateHeader\Perlin.hpp">
+      <Filter>generateHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="header\generateHeader\rapidxml.hpp">
+      <Filter>generateHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="header\generateHeader\vec3.hpp">
+      <Filter>generateHeader</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="debug\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="release\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="header\renderHeader\colorwheel.h">
+      <Filter>renderHeader</Filter>
+    </CustomBuild>
+    <CustomBuild Include="header\renderHeader\hoverpoints.h">
+      <Filter>renderHeader</Filter>
+    </CustomBuild>
+    <CustomBuild Include="header\renderHeader\mainwindow.h">
+      <Filter>renderHeader</Filter>
+    </CustomBuild>
+    <CustomBuild Include="header\renderHeader\transferfunctionwidget.h">
+      <Filter>renderHeader</Filter>
+    </CustomBuild>
+    <CustomBuild Include="header\renderHeader\volumerenderwidget.h">
+      <Filter>renderHeader</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="mainwindow.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="kernels.qrc">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <None Include="kernels\volumeraycast.cl">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="style.qss">
+      <Filter>Distribution Files</Filter>
+    </None>
+    <None Include="kernels\volumeraycast.cl">
+      <Filter>Distribution Files</Filter>
+    </None>
+    <None Include="kernels\volumeraycast.cl" />
+    <None Include="kernels\volumeraycast.cl" />
+    <None Include="kernels\volumeraycast.cl" />
+    <None Include="kernels\volumeraycast.cl" />
+    <None Include="kernels\volumeraycast.cl" />
+    <None Include="kernels\volumeraycast.cl" />
+  </ItemGroup>
+</Project>
