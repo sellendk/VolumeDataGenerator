@@ -395,7 +395,7 @@ void VolumeRenderCL::generateBricks()
  * @brief VolumeRenderCL::volDataToCLmem
  * @param volumeData
  */
-void VolumeRenderCL::volDataToCLmem(const std::vector<std::vector<char>> &volumeData)
+void VolumeRenderCL::volDataToCLmem(const std::vector<std::vector<unsigned char>> &volumeData)
 {
     if (!_dr.has_data())
         return;
@@ -410,21 +410,24 @@ void VolumeRenderCL::volDataToCLmem(const std::vector<std::vector<char>> &volume
             format.image_channel_data_type = CL_UNORM_INT16;
         else if (_dr.properties().format == "FLOAT")
             format.image_channel_data_type = CL_FLOAT;
+		else if (_dr.properties().format == "DOUBLE")
+			format.image_channel_data_type = CL_FLOAT;
         else
             throw std::invalid_argument("Unknown or invalid volume data format.");
 
-        _volumesMem.clear();
-        for (const auto &v : volumeData)
-        {
-            _volumesMem.push_back(cl::Image3D(_contextCL,
-                                              CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
-                                              format,
-                                              _dr.properties().volume_res[0],
-                                              _dr.properties().volume_res[1],
-                                              _dr.properties().volume_res[2],
-                                              0, 0,
-                                              (void *)v.data()));
-        }
+		if (!_volumesMem.empty()) _volumesMem.clear();
+
+		for (const auto &v : volumeData)
+		{
+			_volumesMem.push_back(cl::Image3D(_contextCL,
+				CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
+				format,
+				_dr.properties().volume_res[0],
+				_dr.properties().volume_res[1],
+				_dr.properties().volume_res[2],
+				0, 0,
+				(void *)v.data()));
+		}
     }
     catch (cl::Error err)
     {
@@ -476,7 +479,7 @@ int VolumeRenderCL::loadVolumeData(const std::string fileName)
 /**
 * @brief VolumeRenderCL::loadVolumeData
 */
-int VolumeRenderCL::loadRandomVolumeData(const DataConfig &cfg, std::vector<float> &data)
+int VolumeRenderCL::loadRandomVolumeData(const DataConfig &cfg, std::vector<double> &data)
 {
 	this->_volLoaded = false;
 	try

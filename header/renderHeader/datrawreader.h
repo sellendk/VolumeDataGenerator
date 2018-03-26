@@ -33,12 +33,12 @@
 /// </summary>
 struct Properties
 {
-    std::string dat_file_name;
-    std::vector<std::string> raw_file_names;
+    std::string dat_file_name = "";
+	std::vector<std::string> raw_file_names = { "" };
     size_t raw_file_size = 0;
 
     std::array<unsigned int, 3> volume_res= {0, 0, 0};
-    std::array<double, 3> slice_thickness = {{-1.0, -1.0, -1.0}};
+    std::array<double, 3> slice_thickness = {{1.0, 1.0, 1.0}};
     std::string format = {"UCHAR"};                     // UCHAR, USHORT,...
     std::string node_file_name;
     unsigned int time_series = {1};
@@ -93,7 +93,20 @@ public:
     /// Get a constant reference to the raw data that has been read.
     /// </summary>
     /// <throws>If no raw data has been read before.</throws>
-    const std::vector<std::vector<char> > &data() const;
+    const std::vector<std::vector<unsigned char> > &data() const;
+
+	/// <summary>
+	/// Get a constant reference to the raw data that has been read.
+	/// </summary>
+	/// <throws>If no raw data has been read before.</throws>
+	const std::vector<std::vector<unsigned short> > & DatRawReader::data_ushort() const
+	{
+		if (_raw_data_ushort.empty())
+		{
+			throw std::runtime_error("No data available.");
+		}
+		return _raw_data_ushort;
+	}
 
     /// <summary>
     /// Get a constant reference to the volume data set properties that have been read.
@@ -106,7 +119,7 @@ public:
 	/// used for random volume data
 	/// </summary>
 	/// <param name="data"> random volume data to be set to _raw_data
-	void setData(const DataConfig &cfg, std::vector<float> &data);
+	void setData(const DataConfig &cfg, const std::vector<double> &data);
 
 private:
 
@@ -134,5 +147,6 @@ private:
     /// <summary>
     /// The raw voxel data.
     /// <summary>
-    std::vector<std::vector<char> > _raw_data;
+	std::vector<std::vector<unsigned char> > _raw_data;
+	std::vector<std::vector<unsigned short> > _raw_data_ushort;
 };

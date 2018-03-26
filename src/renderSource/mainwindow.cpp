@@ -114,6 +114,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->colorWheel, &colorwidgets::ColorWheel::colorChanged,
             ui->transferFunctionEditor, &TransferFunctionWidget::setColorSelected);
 
+	connect(ui->pbSetConfig, &QPushButton::clicked, this, &MainWindow::setConfig);
+
     ui->statusBar->addPermanentWidget(&_statusLabel);
     connect(ui->volumeRenderWidget, &VolumeRenderWidget::frameSizeChanged,
             this, &MainWindow::setStatusText);
@@ -478,9 +480,38 @@ void MainWindow::randomData() {
 	ui->statusBar->updateGeometry();
 	QApplication::processEvents();
 
-	QFuture<void> future = QtConcurrent::run(this, &MainWindow::setVolumeData, "");
-	_watcher->setFuture(future);
-	_timer.start(100);
+	finishedLoading();
+
+	/*qfuture<void> future = qtconcurrent::run(this, &mainwindow::setrandomvolumedata, "");
+	_watcher->setfuture(future);
+	_timer.start(100);*/
+}
+
+
+/**
+* @brief sets the config entered in the UI
+*/
+void MainWindow::setConfig() {
+	if (ui->cbPrecision->currentText().compare("UCHAR") == 0) _cfg.precision = 0;
+	else if (ui->cbPrecision->currentText().compare("USHORT") == 0) _cfg.precision = 1;
+	else if (ui->cbPrecision->currentText().compare("FLOAT") == 0) _cfg.precision = 2;
+	else if (ui->cbPrecision->currentText().compare("DOUBLE") == 0) _cfg.precision = 3;
+	else _cfg.precision = 0;
+	_cfg.res = { ui->lEResX->text().toUInt(), ui->lEResY->text().toUInt(), ui->lEResZ->text().toUInt() };
+	_cfg.coverage = { ui->lECovX->text().toDouble(), ui->lECovY->text().toDouble(), ui->lECovZ->text().toDouble() };
+	if (ui->cbShape->currentText().compare("Cube") == 0) _cfg.shape = cube;
+	else if (ui->cbShape->currentText().compare("Sphere") == 0) _cfg.shape = sphere;
+	else _cfg.shape = cube;
+	_cfg.numBodies = ui->sbnumBodies->value();
+	_cfg.dimBodies = { ui->lEdimX->text().toUInt(), ui->lEdimY->text().toUInt(), ui->lEdimZ->text().toUInt() };
+	if (ui->cbLayout->currentText().compare("Structured") == 0) _cfg.randomBodyLayout = 0;
+	else if (ui->cbLayout->currentText().compare("Pseudorandom") == 0) _cfg.randomBodyLayout = 1;
+	else if (ui->cbLayout->currentText().compare("Halton") == 0) _cfg.randomBodyLayout = 2;
+	else if (ui->cbLayout->currentText().compare("Perlin") == 0) _cfg.randomBodyLayout = 3;
+	else _cfg.randomBodyLayout = 0;
+	_cfg.frequency = { ui->lEFreqX->text().toUInt(), ui->lEFreqY->text().toUInt(), ui->lEFreqZ->text().toUInt() };
+	_cfg.magnitude = { ui->lEMagX->text().toDouble(), ui->lEMagY->text().toDouble(), ui->lEMagZ->text().toDouble() };
+	_cfg.slice_thickness = { ui->lESliceX->text().toDouble(), ui->lESliceY->text().toDouble(), ui->lESliceZ->text().toDouble() };
 }
 
 
@@ -542,3 +573,5 @@ void MainWindow::chooseBackgroundColor()
     if (col.isValid())
         ui->volumeRenderWidget->setBackgroundColor(col);
 }
+
+

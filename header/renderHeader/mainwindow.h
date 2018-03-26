@@ -74,7 +74,8 @@ protected:
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
 private:
-
+;
+	void setConfig();
     void setVolumeData(const QString &fileName);
     bool readVolumeFile(const QString &fileName);
 

@@ -19,7 +19,7 @@ public:
 	* @param res The resolution of the volume
 	* @return scalar The scalar data calculated
 	*/
-	double userDef(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<int> &freq, const Vec3<unsigned int> &res, const std::string &str);
+	double userDef(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<unsigned int> &freq, const Vec3<unsigned int> &res, const std::string &str);
 
 	/**
 	* @brief creates a density scalar data using a square wave function
@@ -29,7 +29,7 @@ public:
 	* @param res The resolution of the volume - not used
 	* @return scalar The scalar data calculated
 	*/
-	double rect(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<int> &freq, const Vec3<unsigned int> &res);
+	double rect(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<unsigned int> &freq, const Vec3<unsigned int> &res);
 
 	/**
 	* @brief creates a density scalar data using a triangle wave function
@@ -39,7 +39,7 @@ public:
 	* @param res The resolution of the volume - not used
 	* @return scalar The scalar data calculated
 	*/
-	double triangle(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<int> &freq, const Vec3<unsigned int> &res);
+	double triangle(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<unsigned int> &freq, const Vec3<unsigned int> &res);
 
 	/**
 	* @brief creates a density scalar data using sine(x)
@@ -49,7 +49,7 @@ public:
 	* @param res The resolution of the volume
 	* @return scalar The scalar data calculated
 	*/
-	double sine(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<int> &freq, const Vec3<unsigned int> &res);
+	double sine(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<unsigned int> &freq, const Vec3<unsigned int> &res);
 
 	/**
 	* @brief creates a density scalar data using sine²(x)
@@ -59,7 +59,7 @@ public:
 	* @param res The resolution of the volume
 	* @return scalar The scalar data calculated
 	*/
-	double Frequency::quadraticSine(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<int> &freq, const Vec3<unsigned int> &res);
+	double Frequency::quadraticSine(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<unsigned int> &freq, const Vec3<unsigned int> &res);
 
 	/**
 	* @brief creates a density scalar data using sine(e^x)
@@ -69,7 +69,7 @@ public:
 	* @param res The resolution of the volume
 	* @return scalar The scalar data calculated
 	*/
-	double Frequency::sineExp(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<int> &freq, const Vec3<unsigned int> &res);
+	double Frequency::sineExp(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<unsigned int> &freq, const Vec3<unsigned int> &res);
 
 	/**
 	* @brief creates a density scalar data using cosine(x)
@@ -79,7 +79,7 @@ public:
 	* @param res The resolution of the volume
 	* @return scalar The scalar data calculated
 	*/
-	double cosine(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<int> &freq, const Vec3<unsigned int> &res);
+	double cosine(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<unsigned int> &freq, const Vec3<unsigned int> &res);
 
 	/**
 	* @brief creates a density scalar data using cosine²(x)
@@ -89,7 +89,7 @@ public:
 	* @param res The resolution of the volume
 	* @return scalar The scalar data calculated
 	*/
-	double Frequency::quadraticCosine(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<int> &freq, const Vec3<unsigned int> &res);
+	double Frequency::quadraticCosine(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<unsigned int> &freq, const Vec3<unsigned int> &res);
 
 	/**
 	* @brief creates a density scalar data using cosine(e^x)
@@ -99,6 +99,6 @@ public:
 	* @param res The resolution of the volume
 	* @return scalar The scalar data calculated
 	*/
-	double Frequency::cosineExp(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<int> &freq, const Vec3<unsigned int> &res);
+	double Frequency::cosineExp(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<unsigned int> &freq, const Vec3<unsigned int> &res);
 };
 #endif // FREQUENCY_HPP

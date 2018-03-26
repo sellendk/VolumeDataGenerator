@@ -112,7 +112,7 @@ public:
 	* @param data The random volume data
 	* @return number of loaded volume time steps
 	*/
-	int loadRandomVolumeData(const DataConfig &cfg, std::vector<float> &data);
+	int loadRandomVolumeData(const DataConfig &cfg, std::vector<double> &data);
 
     /**
      * @brief Answers if volume data has been loaded.
@@ -216,7 +216,7 @@ private:
      * @brief volDataToCLmem
      * @param volumeData
      */
-    void volDataToCLmem(const std::vector<std::vector<char> > &volumeData);
+    void volDataToCLmem(const std::vector<std::vector<unsigned char> > &volumeData);
 
     /**
      *

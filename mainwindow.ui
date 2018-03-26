@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_3">
-    <item row="0" column="0">
+    <item row="9" column="2">
      <widget class="VolumeRenderWidget" name="volumeRenderWidget"/>
     </item>
    </layout>
@@ -26,7 +26,7 @@
      <x>0</x>
      <y>0</y>
      <width>1298</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -62,7 +62,7 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents">
     <layout class="QGridLayout" name="gridLayout_2">
-     <item row="2" column="0" colspan="2">
+     <item row="2" column="0" colspan="5">
       <widget class="colorwidgets::ColorWheel" name="colorWheel" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -78,7 +78,38 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="0" colspan="2">
+     <item row="1" column="0" colspan="5">
+      <widget class="QGroupBox" name="gbTimeSeries">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="title">
+        <string>Time series</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
+         <widget class="QSlider" name="sldTimeStep">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="sbTimeStep"/>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="0" column="4">
       <widget class="QGroupBox" name="groupBox">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
@@ -217,10 +248,7 @@
        </layout>
       </widget>
      </item>
-     <item row="3" column="0" colspan="2">
-      <widget class="TransferFunctionWidget" name="transferFunctionEditor" native="true"/>
-     </item>
-     <item row="4" column="1">
+     <item row="4" column="4">
       <widget class="QComboBox" name="cbInterpolation">
        <item>
         <property name="text">
@@ -241,42 +269,556 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="0" colspan="2">
+     <item row="5" column="0" colspan="5">
       <widget class="QPushButton" name="pbResetTff">
        <property name="text">
         <string>Reset transfer function</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="0" colspan="2">
-      <widget class="QGroupBox" name="gbTimeSeries">
+     <item row="3" column="0" colspan="5">
+      <widget class="TransferFunctionWidget" name="transferFunctionEditor" native="true"/>
+     </item>
+     <item row="0" column="0" colspan="4">
+      <widget class="QGroupBox" name="configGroup">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
        <property name="minimumSize">
         <size>
-         <width>0</width>
-         <height>0</height>
+         <width>197</width>
+         <height>250</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>250</width>
+         <height>250</height>
         </size>
        </property>
        <property name="title">
-        <string>Time series</string>
+        <string>Config settings</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout_4">
-        <item row="0" column="0">
-         <widget class="QSlider" name="sldTimeStep">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
+       <widget class="QSpinBox" name="sbnumBodies">
+        <property name="geometry">
+         <rect>
+          <x>97</x>
+          <y>114</y>
+          <width>43</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="maximum">
+         <number>999999</number>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="cbShape">
+        <property name="geometry">
+         <rect>
+          <x>97</x>
+          <y>93</y>
+          <width>72</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <item>
+         <property name="text">
+          <string>Cube</string>
+         </property>
         </item>
-        <item row="0" column="1">
-         <widget class="QSpinBox" name="sbTimeStep"/>
+        <item>
+         <property name="text">
+          <string>Sphere</string>
+         </property>
         </item>
-       </layout>
+       </widget>
+       <widget class="QLineEdit" name="lEResX">
+        <property name="geometry">
+         <rect>
+          <x>97</x>
+          <y>51</y>
+          <width>31</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1526</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lEResY">
+        <property name="geometry">
+         <rect>
+          <x>129</x>
+          <y>51</y>
+          <width>31</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1526</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lEResZ">
+        <property name="geometry">
+         <rect>
+          <x>161</x>
+          <y>51</y>
+          <width>31</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1526</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lECovX">
+        <property name="geometry">
+         <rect>
+          <x>97</x>
+          <y>72</y>
+          <width>31</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1526</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lECovY">
+        <property name="geometry">
+         <rect>
+          <x>129</x>
+          <y>72</y>
+          <width>31</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1526</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lECovZ">
+        <property name="geometry">
+         <rect>
+          <x>161</x>
+          <y>72</y>
+          <width>31</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1526</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lEdimX">
+        <property name="geometry">
+         <rect>
+          <x>97</x>
+          <y>135</y>
+          <width>31</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1526</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lEdimY">
+        <property name="geometry">
+         <rect>
+          <x>129</x>
+          <y>135</y>
+          <width>31</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1526</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lEdimZ">
+        <property name="geometry">
+         <rect>
+          <x>161</x>
+          <y>135</y>
+          <width>31</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1526</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lEFreqX">
+        <property name="geometry">
+         <rect>
+          <x>97</x>
+          <y>177</y>
+          <width>31</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1526</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lEFreqY">
+        <property name="geometry">
+         <rect>
+          <x>129</x>
+          <y>177</y>
+          <width>31</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1526</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lEFreqZ">
+        <property name="geometry">
+         <rect>
+          <x>161</x>
+          <y>177</y>
+          <width>31</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1526</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lEMagX">
+        <property name="geometry">
+         <rect>
+          <x>97</x>
+          <y>198</y>
+          <width>31</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1526</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lEMagY">
+        <property name="geometry">
+         <rect>
+          <x>129</x>
+          <y>198</y>
+          <width>31</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1526</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lEMagZ">
+        <property name="geometry">
+         <rect>
+          <x>161</x>
+          <y>198</y>
+          <width>31</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1526</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lESliceX">
+        <property name="geometry">
+         <rect>
+          <x>97</x>
+          <y>219</y>
+          <width>31</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1526</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lESliceY">
+        <property name="geometry">
+         <rect>
+          <x>129</x>
+          <y>219</y>
+          <width>31</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1526</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lESliceZ">
+        <property name="geometry">
+         <rect>
+          <x>161</x>
+          <y>219</y>
+          <width>31</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>1526</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="labelPrecision">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>30</y>
+          <width>80</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Precision</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="labelResolution">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>51</y>
+          <width>80</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Resolution</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="labelCoverage">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>72</y>
+          <width>80</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Coverage</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="labelShape">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>93</y>
+          <width>80</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Shape</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="labelnumBodies">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>114</y>
+          <width>80</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Number Bodies</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="labeldimBodies">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>135</y>
+          <width>80</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>dimBodies</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="labelLayout">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>156</y>
+          <width>80</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Layout</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="labelFrequency">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>177</y>
+          <width>80</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Frequency</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="labelMagnitude">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>198</y>
+          <width>80</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Magnitude</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="labelSliceThickness">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>219</y>
+          <width>80</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Slice Thickness</string>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="comboBox">
+        <property name="geometry">
+         <rect>
+          <x>97</x>
+          <y>156</y>
+          <width>80</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <item>
+         <property name="text">
+          <string>Structured</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Pseudorandom</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Halton</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Perlin</string>
+         </property>
+        </item>
+       </widget>
+       <widget class="QComboBox" name="cbShape_2">
+        <property name="geometry">
+         <rect>
+          <x>97</x>
+          <y>30</y>
+          <width>72</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <item>
+         <property name="text">
+          <string>UCHAR</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>USHORT</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>FLOAT</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>DOUBLE</string>
+         </property>
+        </item>
+       </widget>
       </widget>
      </item>
     </layout>

@@ -57,7 +57,7 @@ public:
 
     void setVolumeData(const QString &fileName);
 
-	void setRandomVolumeData(const DataConfig &cfg, std::vector<float> &data);
+	void setRandomVolumeData(const DataConfig &cfg, std::vector<double> &data);
 
     bool hasData();
 

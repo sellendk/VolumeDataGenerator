@@ -49,7 +49,7 @@ double Frequency::evaluate(double mag, double freq, double x, const std::string 
 	return expression.value();
 }
 
-double Frequency::userDef(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<int> &freq, const Vec3<unsigned int> &res, const std::string &str) {
+double Frequency::userDef(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<unsigned int> &freq, const Vec3<unsigned int> &res, const std::string &str) {
 	double x = cords.x / static_cast<double>(res.x) * M_2_PI;
 	double y = cords.y / static_cast<double>(res.y) * M_2_PI;
 	double z = cords.z / static_cast<double>(res.z) * M_2_PI;
@@ -65,7 +65,7 @@ double Frequency::userDef(const Vec3<int> &cords, const Vec3<double> &mag, const
 	return (density.x + density.y + density.z);
 }
 
-double Frequency::rect(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<int> &freq, const Vec3<unsigned int> &res) {
+double Frequency::rect(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<unsigned int> &freq, const Vec3<unsigned int> &res) {
 	Vec3<double> magS = mag;
 	if (magS.x + magS.y + magS.z > 1.0) magS /= (magS.x + magS.y + magS.z);
 
@@ -79,7 +79,7 @@ double Frequency::rect(const Vec3<int> &cords, const Vec3<double> &mag, const Ve
 	return (density.x + density.y + density.z);
 }
 
-double Frequency::triangle(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<int> &freq, const Vec3<unsigned int> &res) {
+double Frequency::triangle(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<unsigned int> &freq, const Vec3<unsigned int> &res) {
 	Vec3<double> magS = mag;
 	if (magS.x + magS.y + magS.z > 1.0) magS /= (magS.x + magS.y + magS.z);
 
@@ -93,7 +93,7 @@ double Frequency::triangle(const Vec3<int> &cords, const Vec3<double> &mag, cons
 	return (density.x + density.y + density.z) / 3.0;
 }
 
-double Frequency::sine(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<int> &freq, const Vec3<unsigned int> &res) {
+double Frequency::sine(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<unsigned int> &freq, const Vec3<unsigned int> &res) {
 	double x = cords.x / static_cast<double>(res.x) * M_2_PI;
 	double y = cords.y / static_cast<double>(res.y) * M_2_PI;
 	double z = cords.z / static_cast<double>(res.z) * M_2_PI;
@@ -109,7 +109,7 @@ double Frequency::sine(const Vec3<int> &cords, const Vec3<double> &mag, const Ve
 	return (density.x + density.y + density.z);
 }
 
-double Frequency::quadraticSine(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<int> &freq, const Vec3<unsigned int> &res) {
+double Frequency::quadraticSine(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<unsigned int> &freq, const Vec3<unsigned int> &res) {
 	double x = cords.x / static_cast<double>(res.x) * M_2_PI;
 	double y = cords.y / static_cast<double>(res.y) * M_2_PI;
 	double z = cords.z / static_cast<double>(res.z) * M_2_PI;
@@ -125,7 +125,7 @@ double Frequency::quadraticSine(const Vec3<int> &cords, const Vec3<double> &mag,
 	return (density.x + density.y + density.z);
 }
 
-double Frequency::sineExp(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<int> &freq, const Vec3<unsigned int> &res) {
+double Frequency::sineExp(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<unsigned int> &freq, const Vec3<unsigned int> &res) {
 	double x = cords.x / static_cast<double>(res.x) * M_2_PI;
 	double y = cords.y / static_cast<double>(res.y) * M_2_PI;
 	double z = cords.z / static_cast<double>(res.z) * M_2_PI;
@@ -141,7 +141,7 @@ double Frequency::sineExp(const Vec3<int> &cords, const Vec3<double> &mag, const
 	return (density.x + density.y + density.z);
 }
 
-double Frequency::cosine(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<int> &freq, const Vec3<unsigned int> &res) {
+double Frequency::cosine(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<unsigned int> &freq, const Vec3<unsigned int> &res) {
 	double x = cords.x / static_cast<double>(res.x) * M_2_PI;
 	double y = cords.y / static_cast<double>(res.y) * M_2_PI;
 	double z = cords.z / static_cast<double>(res.z) * M_2_PI;
@@ -157,7 +157,7 @@ double Frequency::cosine(const Vec3<int> &cords, const Vec3<double> &mag, const 
 	return (density.x + density.y + density.z);
 }
 
-double Frequency::quadraticCosine(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<int> &freq, const Vec3<unsigned int> &res) {
+double Frequency::quadraticCosine(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<unsigned int> &freq, const Vec3<unsigned int> &res) {
 	double x = cords.x / static_cast<double>(res.x) * M_2_PI;
 	double y = cords.y / static_cast<double>(res.y) * M_2_PI;
 	double z = cords.z / static_cast<double>(res.z) * M_2_PI;
@@ -173,7 +173,7 @@ double Frequency::quadraticCosine(const Vec3<int> &cords, const Vec3<double> &ma
 	return (density.x + density.y + density.z);
 }
 
-double Frequency::cosineExp(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<int> &freq, const Vec3<unsigned int> &res) {
+double Frequency::cosineExp(const Vec3<int> &cords, const Vec3<double> &mag, const Vec3<unsigned int> &freq, const Vec3<unsigned int> &res) {
 	double x = cords.x / static_cast<double>(res.x) * M_2_PI;
 	double y = cords.y / static_cast<double>(res.y) * M_2_PI;
 	double z = cords.z / static_cast<double>(res.z) * M_2_PI;

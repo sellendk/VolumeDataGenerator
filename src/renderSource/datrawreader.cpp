@@ -32,34 +32,53 @@
 /*
 * DatRawReader::setProp
 */
-void DatRawReader::setData(const DataConfig &cfg, std::vector<float> &data) {
+void DatRawReader::setData(const DataConfig &cfg, const std::vector<double> &data) {
+	std::vector<unsigned char> convert_uchar;
+	std::vector<unsigned short> convert_ushort;
 	// set properties read from cfg
-	int precision = cfg.precision;
-	switch (precision) {
-	case 1: _prop.format = "UCHAR"; break;
-	case 2: _prop.format = "USHRT"; break;
-	case 3: _prop.format = "FLOAT"; break;
-	case 4: _prop.format = "DBL"; break;
+	switch (cfg.precision) {
+	case 0: _prop.format = "UCHAR"; break;
+	case 1: _prop.format = "USHORT"; break;
+	case 2: _prop.format = "FLOAT"; break;
+	case 3: _prop.format = "DOUBLE"; break;
 	default: _prop.format = "UCHAR"; break;
 	}
 	_prop.volume_res = { cfg.res.x, cfg.res.y, cfg.res.z };
+	_prop.slice_thickness = { cfg.slice_thickness.x, cfg.slice_thickness.y , cfg.slice_thickness.z };
 
-	// convert generated data to proper format
-	// TODO: FLOAT and DBL
-	std::vector<char> convert;
+	_raw_data.clear();
+	_raw_data_ushort.clear();
+
 	if (_prop.format.compare("UCHAR") == 0) {
 		for (int i = 0; i < data.size(); ++i) {
-			data[i] = static_cast<unsigned char>(data[i] * UCHAR_MAX);
-			convert.push_back(data[i]);
+			//unsigned char conv = static_cast<unsigned char>(data[i]) * UCHAR_MAX;
+			convert_uchar.push_back(static_cast<unsigned char>(data[i] * static_cast<double>(UCHAR_MAX)));
 		}
+		_raw_data.push_back(convert_uchar);
 	}
-	if (_prop.format.compare("USHORT") == 0) {
+	else if (_prop.format.compare("USHORT") == 0) {
 		for (int i = 0; i < data.size(); ++i) {
-			data[i] = static_cast<unsigned short>(data[i] * USHRT_MAX);
-			convert.push_back(data[i]);
+			convert_ushort.push_back(static_cast<unsigned short>(data[i] * static_cast<double>(USHRT_MAX)));
+			convert_uchar.push_back(static_cast<unsigned char>(data[i] * static_cast<double>(UCHAR_MAX)));
+		}
+		_raw_data_ushort.push_back(convert_ushort);
+		_raw_data.push_back(convert_uchar);
+	}
+	else if (_prop.format.compare("FLOAT") == 0) {
+		for (int i = 0; i < data.size(); ++i) {
+			convert_uchar.push_back(static_cast<float>(data[i] * static_cast<double>(FLT_MAX)));
 		}
 	}
-	_raw_data.push_back(convert);
+	else if(_prop.format.compare("DOUBLE") == 0) {
+		for (int i = 0; i < data.size(); ++i) {
+			convert_uchar.push_back(data[i]);
+		}
+	}
+	else { // default case: UCHAR
+		for (int i = 0; i < data.size(); ++i) {
+			convert_uchar.push_back(static_cast<unsigned char>(data[i] * static_cast<double>(UCHAR_MAX)));
+		}
+	}
 }
 
 /*
@@ -99,7 +118,7 @@ bool DatRawReader::has_data() const
 /*
  * DatRawReader::data
  */
-const std::vector<std::vector<char> > & DatRawReader::data() const
+const std::vector<std::vector<unsigned char> > & DatRawReader::data() const
 {
     if (!has_data())
     {
@@ -244,17 +263,17 @@ void DatRawReader::read_raw(const std::string raw_file_name)
         is.seekg(0, is.end);
 #ifdef _WIN32
         // HACK: to support files bigger than 2048 MB on windows
-        _prop.raw_file_size = *(__int64 *)(((char *)&(is.tellg())) + 8);
+        _prop.raw_file_size = *(__int64 *)(((unsigned char *)&(is.tellg())) + 8);
 #else
         _prop.raw_file_size = is.tellg();
 #endif
         is.seekg( 0, is.beg );
 
-        std::vector<char> raw_timestep;
+        std::vector<unsigned char> raw_timestep;
         raw_timestep.resize(_prop.raw_file_size);
 
         // read data as a block:
-        is.read(raw_timestep.data(), _prop.raw_file_size);
+        is.read(reinterpret_cast<char *>(raw_timestep.data()), _prop.raw_file_size);
         _raw_data.push_back(std::move(raw_timestep));
 
         if (!is)

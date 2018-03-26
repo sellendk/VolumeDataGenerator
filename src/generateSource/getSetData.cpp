@@ -40,28 +40,28 @@ bool GetSetData::saveRawData(std::vector<float> &volData, const DataConfig &cfg)
 	*/
 	switch (cfg.precision)
 	{
-	case 1:
+	case 0:
 		for (auto voxel : volData)
 		{
 			unsigned char data = static_cast<unsigned char>(voxel * static_cast<float>(UCHAR_MAX));
 			raw.write(reinterpret_cast<const char*>(&data), sizeof(unsigned char));
 		}
 		break;
-	case 2:
+	case 1:
 		for (auto voxel : volData)
 		{
 			unsigned short data = static_cast<unsigned short>(voxel * static_cast<float>(USHRT_MAX));
 			raw.write(reinterpret_cast<const char*>(&data), sizeof(unsigned short));
 		}
 		break;
-	case 3:
+	case 2:
 		for (auto voxel : volData)
 		{
 			float data = voxel * static_cast<float>(FLT_MAX);
 			raw.write(reinterpret_cast<const char*>(&data), sizeof(float));
 		}
 		break;
-	case 4:
+	case 3:
 		for (auto voxel : volData)
 		{
 			double data = static_cast<double>(voxel * static_cast<float>(ULLONG_MAX));

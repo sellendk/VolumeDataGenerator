@@ -14,21 +14,21 @@
 * a function pointer used in generateScalarData to select different functions
 * from the Frequency class
 */
-double (Frequency::*mptr)(const Vec3<int>&, const Vec3<double>&, const Vec3<int>&, const Vec3<unsigned int>&) = NULL;
+double (Frequency::*mptr)(const Vec3<int>&, const Vec3<double>&, const Vec3<unsigned int>&, const Vec3<unsigned int>&) = NULL;
 
 DataGenerator::DataGenerator()
 {
 	std::srand(42); // deterministic seed
 }
 
-bool DataGenerator::isPrime(const int prime) {
+bool DataGenerator::isPrime(int prime) {
 	for (int i = 2; i <= prime / 2; ++i) {
 		if (prime % i == 0) return false;
 	}
 	return true;
 }
 
-double DataGenerator::Halton_Seq(int index, const int base) {
+double DataGenerator::Halton_Seq(int index, int base) {
 	double f = 1, r = 0;
 	while (index > 0) {
 		f = f / base;
@@ -38,31 +38,19 @@ double DataGenerator::Halton_Seq(int index, const int base) {
 	return r;
 }
 
-bool DataGenerator::isOverlapping(const Vec3<double> center,
-	const Vec3<double> radius,
-	const Shape shape,
-	const std::vector<Vec3<double>> *elementCenters)
+bool DataGenerator::isOverlapping(const Vec3<double> &center,
+	const Vec3<double> &radius,
+	const Shape &shape,
+	const std::vector<Vec3<double>> &elementCenters)
 {
-	if (elementCenters->empty())
-	{
+	if (elementCenters.empty()) {
+		std::cout << "There are no elements within elementCenters" << std::endl;
 		return false;
 	}
 
-	for (auto el : *elementCenters)
-	{
-		if (shape == sphere)
-		{
-			if (center.dist(el) < 2.0*radius.length())
-			{
-				return true;
-			}
-		}
-		else if (shape == cube)
-		{
-			if (center.dist(el) < 2.0*radius.length())
-			{
-				return true;
-			}
+	for (auto el : elementCenters) {
+		if (((shape == sphere) || (shape == cube)) && (center.dist(el) < 2.0*radius.length())) {
+			return true;
 		}
 	}
 
@@ -70,7 +58,7 @@ bool DataGenerator::isOverlapping(const Vec3<double> center,
 }
 
 
-Vec3<double> DataGenerator::addRandomElement(const Vec3<double> radius)
+Vec3<double> DataGenerator::addRandomElement(const Vec3<double> &radius)
 {
 	// creates new random center coordinates as long as they don't match the requirements
 	assert(radius < Vec3<double>(1.0) && radius > Vec3<double>(0.0));
@@ -203,13 +191,14 @@ int DataGenerator::generateVolume(DataConfig cfg)
 		// as long as there are less elements added than requested
 		// try to add more elements
 		// ??TODO: wenn nach x Sekunden/Minuten kein weiteres passendes Center gefunden wird, gib die bereits hinzugefügten zurück oder Abbruch
+		// neuer Versuch mit neuem seed
 		while (i < cfg.numBodies)
 		{
 			Vec3<double> center = addRandomElement(diameter / 2.0);
 
 			// check, if elements are overlapping
 			// if yes, drop current center and try a new one
-			if (!isOverlapping(center, diameter / 2.0, cfg.shape, &m_elementCenters))
+			if (!isOverlapping(center, diameter / 2.0, cfg.shape, m_elementCenters))
 			{
 				m_elementCenters.push_back(center);
 				++i;
@@ -219,7 +208,7 @@ int DataGenerator::generateVolume(DataConfig cfg)
 	}
 
 	// layout based on halton sequence
-	else if (cfg.randomBodyLayout == 2 && cfg.coverage < Vec3<int>(80)) {	
+	else if (cfg.randomBodyLayout == 2 && cfg.coverage < Vec3<double>(80.0)) {	
 		long long i = 0;
 		size_t baseX, baseY, baseZ;
 
@@ -251,7 +240,7 @@ int DataGenerator::generateVolume(DataConfig cfg)
 
 			// check, if elements are overlapping
 			// if yes, drop current center and try a new one
-			if (!isOverlapping(center, diameter / 2.0, cfg.shape, &m_elementCenters))
+			if (!isOverlapping(center, diameter / 2.0, cfg.shape, m_elementCenters))
 			{
 				m_elementCenters.push_back(center);
 				++i;
@@ -302,82 +291,6 @@ int DataGenerator::generateVolume(DataConfig cfg)
 	return true;
 }
 
-int DataGenerator::generateTestVolume(DataConfig cfg)
-{
-	long long volSize = static_cast<long long>(cfg.res.x) * static_cast<long long>(cfg.res.y) *
-		static_cast<long long>(cfg.res.z);
-
-	m_isShape.clear();
-	m_isShape.resize(volSize, false);
-
-	m_volData.clear();
-	m_volData.resize(volSize, 0.0f);
-
-	m_elementCenters.clear();
-	m_elementCenters.resize(cfg.numBodies);
-
-	Vec3<double> diameter = cfg.coverage*0.01 / cfg.dimBodies;
-
-	if (cfg.numBodies >= volSize / 2L)
-	{
-		std::cout << "Number of bodies is greater than half the volume resolution: "
-			<< cfg.numBodies << " > " << volSize / 2L << std::endl;
-		return false;
-	}
-
-	if (cfg.numBodies == 1L)
-	{
-		m_elementCenters.at(0) = Vec3<double>(0.5, 0.5, 0.5);
-	}
-	else if (cfg.randomBodyLayout && cfg.coverage < Vec3<int>(80))   // random layout
-	{
-		long long i = 0;
-		while (i < cfg.numBodies)
-		{
-			Vec3<double> center = addRandomElement(diameter / 2.0);
-			if (!isOverlapping(center, diameter / 2.0, cfg.shape, &m_elementCenters))
-			{
-				m_elementCenters.push_back(center);
-				++i;
-				std::cout << "Added element " << i << "/" << cfg.numBodies << std::endl;
-			}
-		}
-	}
-	else
-	{
-		m_elementCenters = addElementsStructured(cfg.numBodies, cfg.dimBodies);
-	}
-
-	for (auto el : m_elementCenters)
-	{
-		Vec3<int> iCenter = static_cast<Vec3<int>>(el * cfg.res);
-		Vec3<int> iRange = static_cast<Vec3<int>>(diameter * 0.5 * cfg.res);
-
-		//        assert(iCenter + iRange < cfg.res);
-		//        assert(iCenter - iRange > Vec3<int>(0));
-
-		double sphereRange = cfg.res.x / 2.0;
-#pragma omp parallel for
-		for (int curX = 0; curX < cfg.res.x; ++curX)
-		{
-			for (int curY = 0; curY < cfg.res.y; ++curY)
-			{
-				for (int curZ = 0; curZ < cfg.res.z; ++curZ)
-				{
-					long long id = curX + curY * cfg.res.x + curZ * cfg.res.x * cfg.res.y;
-					double centerDist = (iCenter - Vec3<int>(curX, curY, curZ)).length();
-					
-					if (cfg.shape == cube || (cfg.shape == sphere && centerDist <= sphereRange))
-					{
-						m_isShape.at(id) = true;
-					}
-				}
-			}
-		}
-	}
-
-	return true;
-}
 
 int DataGenerator::generateScalarData(const DataConfig cfg)
 {
@@ -450,9 +363,7 @@ int DataGenerator::generateScalarData(const DataConfig cfg)
 				if (m_isShape.at(id))
 				{		
 					// freq.*mptr points to the function selected above
-					double result = (freq.*mptr)(Vec3<unsigned int>(dirX, dirY, dirZ), cfg.magnitude, cfg.frequency, cfg.res);
-					//double result = freq.userDef(Vec3<int>(dirX, dirY, dirZ), cfg.magnitude, cfg.frequency, cfg.res, str);
-					m_volData.at(id) = static_cast<float>(result);
+					m_volData.at(id) = (freq.*mptr)(Vec3<unsigned int>(dirX, dirY, dirZ), cfg.magnitude, cfg.frequency, cfg.res);
 				}
 			}
 		}
