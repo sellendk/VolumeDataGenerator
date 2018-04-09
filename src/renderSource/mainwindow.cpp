@@ -391,7 +391,7 @@ void MainWindow::finishedLoading()
     _progBar.setValue(100);
     _progBar.hide();
     _timer.stop();
-    qDebug() << "finished.";
+	qDebug() << "finished.";
     this->setStatusText();
 
 //    const QVector3D volRes = ui->volumeRenderWidget->getVolumeResolution();
@@ -436,13 +436,25 @@ void MainWindow::loadTff()
  */
 void MainWindow::openVolumeFile()
 {
+	std::vector<DataConfig> configs;
+
     QFileDialog dia;
     QString defaultPath = _settings->value( "LastVolumeFile" ).toString();
     QString pickedFile = dia.getOpenFileName(
-                this, tr("Open Volume Data"), defaultPath, tr("Volume data files (*.dat)"));
+                this, tr("Open Volume Data"), defaultPath, tr("Volume data files (*.dat);;XML files (*.xml);; JSON files (*.json)"));
     if (!pickedFile.isEmpty())
     {
-        if (!readVolumeFile(pickedFile))
+		if (pickedFile.contains(".xml", Qt::CaseInsensitive)) {
+			_getSetData.getXMLConfig(pickedFile.toUtf8().constData(), _cfg, configs);
+			setUI();
+			randomData();
+		}
+		else if (pickedFile.contains(".json", Qt::CaseInsensitive)) {
+			_getSetData.getJSONConfig(pickedFile.toUtf8().constData(), _cfg, configs);
+			setUI();
+			randomData();
+		}
+        else if (!readVolumeFile(pickedFile))
         {
             QMessageBox msgBox;
             msgBox.setIcon( QMessageBox::Critical );
@@ -473,23 +485,49 @@ void MainWindow::randomData() {
 
 	ui->volumeRenderWidget->setRandomVolumeData(_cfg, _dataGenerator.data());
 
-	_progBar.setFormat("Loading volume data");
+	_progBar.setFormat("Generating volume data...");
 	_progBar.setValue(1);
 	_progBar.show();
 	ui->statusBar->addPermanentWidget(&_progBar, 2);
 	ui->statusBar->updateGeometry();
 	QApplication::processEvents();
 
-	finishedLoading();
+	// MainWindow::finishedLoading
+	////////////////////////////////////////////
+	_progBar.setValue(100);
+	_progBar.hide();
+	_timer.stop();
+	qDebug() << "finished.";
+	////////////////////////////////////////////
 
-	/*qfuture<void> future = qtconcurrent::run(this, &mainwindow::setrandomvolumedata, "");
-	_watcher->setfuture(future);
-	_timer.start(100);*/
+	// MainWindow::setStatusText
+	////////////////////////////////////////////////////////////////////////////////////////
+	QString status = "No data loaded yet.";
+	if (ui->volumeRenderWidget->hasData())
+	{
+		status = "Volume data successful generated.";
+		status += " | Volume: ";
+		status += QString::number(ui->volumeRenderWidget->getVolumeResolution().x());
+		status += "x";
+		status += QString::number(ui->volumeRenderWidget->getVolumeResolution().y());
+		status += "x";
+		status += QString::number(ui->volumeRenderWidget->getVolumeResolution().z());
+		status += " | Frame: ";
+		status += QString::number(ui->volumeRenderWidget->size().width());
+		status += "x";
+		status += QString::number(ui->volumeRenderWidget->size().height());
+		status += " ";
+	}
+	_statusLabel.setText(status);
+	////////////////////////////////////////////////////////////////////////////////////////
+
+	ui->volumeRenderWidget->setLoadingFinished(true);
+	ui->volumeRenderWidget->updateView();
 }
 
 
 /**
-* @brief sets the config entered in the UI
+* @brief MainWindow::setConfig
 */
 void MainWindow::setConfig() {
 	if (ui->cbPrecision->currentText().compare("UCHAR") == 0) _cfg.precision = 0;
@@ -514,6 +552,35 @@ void MainWindow::setConfig() {
 	_cfg.slice_thickness = { ui->lESliceX->text().toDouble(), ui->lESliceY->text().toDouble(), ui->lESliceZ->text().toDouble() };
 }
 
+
+/**
+* @brief MainWindow::setUI
+*/
+void MainWindow::setUI() {
+	ui->cbPrecision->setCurrentIndex(_cfg.precision);
+	ui->lEResX->setText(QString::number(_cfg.res.x));
+	ui->lEResY->setText(QString::number(_cfg.res.y));
+	ui->lEResZ->setText(QString::number(_cfg.res.z));
+	ui->lECovX->setText(QString::number(_cfg.coverage.x));
+	ui->lECovY->setText(QString::number(_cfg.coverage.y));
+	ui->lECovZ->setText(QString::number(_cfg.coverage.z));
+	if (_cfg.shape == cube) ui->cbShape->setCurrentIndex(0);
+	else if (_cfg.shape == sphere) ui->cbShape->setCurrentIndex(1);
+	ui->sbnumBodies->setValue(_cfg.numBodies);
+	ui->lEdimX->setText(QString::number(_cfg.dimBodies.x));
+	ui->lEdimY->setText(QString::number(_cfg.dimBodies.y));
+	ui->lEdimZ->setText(QString::number(_cfg.dimBodies.z));
+	ui->cbLayout->setCurrentIndex(_cfg.randomBodyLayout);
+	ui->lEFreqX->setText(QString::number(_cfg.frequency.x));
+	ui->lEFreqY->setText(QString::number(_cfg.frequency.y));
+	ui->lEFreqZ->setText(QString::number(_cfg.frequency.z));
+	ui->lEMagX->setText(QString::number(_cfg.magnitude.x));
+	ui->lEMagY->setText(QString::number(_cfg.magnitude.y));
+	ui->lEMagZ->setText(QString::number(_cfg.magnitude.z));
+	ui->lESliceX->setText(QString::number(_cfg.slice_thickness.x));
+	ui->lESliceY->setText(QString::number(_cfg.slice_thickness.y));
+	ui->lESliceZ->setText(QString::number(_cfg.slice_thickness.z));
+}
 
 /**
  * @brief MainWindow::dragEnterEvent

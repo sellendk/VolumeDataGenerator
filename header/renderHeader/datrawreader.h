@@ -33,7 +33,9 @@
 /// </summary>
 struct Properties
 {
-    std::string dat_file_name = "";
+	bool random = false;
+
+	std::string dat_file_name = "";
 	std::vector<std::string> raw_file_names = { "" };
     size_t raw_file_size = 0;
 
@@ -84,7 +86,7 @@ public:
     void read_files(const std::string dat_file_name);
 
     /// <summary>
-    /// Get the read status of hte objects.
+    /// Get the read status of the objects.
     /// <summary>
     /// <returns><c>true</c> if raw data has been read, <c>false</c> otherwise.</returns>
     bool has_data() const;
@@ -95,19 +97,6 @@ public:
     /// <throws>If no raw data has been read before.</throws>
     const std::vector<std::vector<unsigned char> > &data() const;
 
-	/// <summary>
-	/// Get a constant reference to the raw data that has been read.
-	/// </summary>
-	/// <throws>If no raw data has been read before.</throws>
-	const std::vector<std::vector<unsigned short> > & DatRawReader::data_ushort() const
-	{
-		if (_raw_data_ushort.empty())
-		{
-			throw std::runtime_error("No data available.");
-		}
-		return _raw_data_ushort;
-	}
-
     /// <summary>
     /// Get a constant reference to the volume data set properties that have been read.
     /// </summary>
@@ -115,11 +104,19 @@ public:
     const Properties &properties() const;
 
 	/// <summary>
-	/// Setting the random generated volume data to _raw_data
-	/// used for random volume data
+	/// Setting the properties of the data and converting the data to the
+	/// desired precision
 	/// </summary>
-	/// <param name="data"> random volume data to be set to _raw_data
+	/// <param name="data"> random volume data to be set to _raw_data </param>
+	/// <param name="cfg"> the config to which the properties are set </param>
 	void setData(const DataConfig &cfg, const std::vector<double> &data);
+
+	///<summary>
+	/// Sets boolean value for random data so that DatRawReader::has_data 
+	/// doesn't fail if no volume data is loaded from a file but generated randomly
+	///</summary>
+	///<param name="randomBoolean">the boolean value to be set</param>
+	void setRandomBoolean(bool randomBoolean);
 
 private:
 
@@ -148,5 +145,4 @@ private:
     /// The raw voxel data.
     /// <summary>
 	std::vector<std::vector<unsigned char> > _raw_data;
-	std::vector<std::vector<unsigned short> > _raw_data_ushort;
 };

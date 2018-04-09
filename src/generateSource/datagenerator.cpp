@@ -1,11 +1,10 @@
 #include "datagenerator.hpp"
-#include "frequency.hpp"
-#include "Perlin.hpp"
 
 #include <cstdlib>
 #include <cassert>
 #include <iostream>
 #include <string>
+#include <time.h>
 
 #define SQRT_3 1.732050807568877
 #define M_2_PI 0.63661977236758134308
@@ -18,17 +17,18 @@ double (Frequency::*mptr)(const Vec3<int>&, const Vec3<double>&, const Vec3<unsi
 
 DataGenerator::DataGenerator()
 {
-	std::srand(42); // deterministic seed
+	// generate constantly new seeds
+	std::srand((unsigned)time(NULL));
 }
 
-bool DataGenerator::isPrime(int prime) {
-	for (int i = 2; i <= prime / 2; ++i) {
+bool DataGenerator::isPrime(unsigned long prime) {
+	for (unsigned long i = 2; i <= prime / 2; ++i) {
 		if (prime % i == 0) return false;
 	}
 	return true;
 }
 
-double DataGenerator::Halton_Seq(int index, int base) {
+double DataGenerator::Halton_Seq(int index, unsigned long base) {
 	double f = 1, r = 0;
 	while (index > 0) {
 		f = f / base;
@@ -62,45 +62,30 @@ Vec3<double> DataGenerator::addRandomElement(const Vec3<double> &radius)
 {
 	// creates new random center coordinates as long as they don't match the requirements
 	assert(radius < Vec3<double>(1.0) && radius > Vec3<double>(0.0));
+
 	Vec3<double> center(0.0, 0.0, 0.0);
-	do
-	{
+	do {
 		center.x = static_cast<double>(std::rand()) / static_cast<double>(RAND_MAX); // RAND_MAX 32767
 	} while (center.x - radius.x < 0.0 || center.x + radius.x > 1.0);
-	do
-	{
+
+	do {
 		center.y = static_cast<double>(std::rand()) / static_cast<double>(RAND_MAX);
 	} while (center.y - radius.y < 0.0 || center.y + radius.y > 1.0);
-	do
-	{
+
+	do {
 		center.z = static_cast<double>(std::rand()) / static_cast<double>(RAND_MAX);
 	} while (center.z - radius.z < 0.0 || center.z + radius.z > 1.0);
+
 	return center;
 }
 
-Vec3<double> DataGenerator::addHaltonElement(const Vec3<double> radius, int baseX, int baseY, int baseZ, long long &index) {
+Vec3<double> DataGenerator::addHaltonElement(const Vec3<double> &radius, int baseX, int baseY, int baseZ, long long &index) {
 
 	// radius has to be less or equal than 0.5 and greater than 0.0
 	assert(radius <= Vec3<double>(0.5) && radius > Vec3<double>(0.0));
 	Vec3<double> center(0.0, 0.0, 0.0);
-	/*while (!isPrime(baseX)) {
-		std::cerr << "baseX is not a prime number! \n" <<
-			"Please enter a prime number: " << std::endl;
-		std::cin >> baseX;
-	}
-	while (!isPrime(baseY)) {
-		std::cerr << "baseY is not a prime number! \n" <<
-			"Please enter a prime number: " << std::endl;
-		std::cin >> baseY;
-	}
-	while (!isPrime(baseZ)) {
-		std::cerr << "baseZ is not a prime number! \n" <<
-			"Please enter a prime number: " << std::endl;
-		std::cin >> baseZ;
-	}*/
-	bool xBounds = false;
-	bool yBounds = false;
-	bool zBounds = false;
+
+	bool xBounds, yBounds, zBounds = false;
 
 	do {
 		// calculates halton value for the given index and prime base
@@ -159,19 +144,16 @@ int DataGenerator::generateVolume(DataConfig cfg)
 		static_cast<long long>(cfg.res.z);
 
 	// initialize vectors
-	if(!m_isShape.empty())
-		m_isShape.clear();
+	m_isShape.clear();
 	m_isShape.resize(volSize, false);
 
-	if(!m_volData.empty())
-		m_volData.clear();
+	m_volData.clear();
 	m_volData.resize(volSize, 0.0f);
 
-	if(!m_elementCenters.empty())
-		m_elementCenters.clear();
+	m_elementCenters.clear();
 
 	// max 1.0 for coverage = 100, dimBodies = 1
-	Vec3<double> diameter = cfg.coverage*0.01 / cfg.dimBodies;
+	Vec3<double> diameter = (cfg.coverage * 0.01) / static_cast<Vec3<double>>(cfg.dimBodies);
 
 	if (cfg.numBodies >= volSize / 2L) {
 		std::cout << "Number of bodies is greater than half the volume resolution: "
@@ -190,11 +172,18 @@ int DataGenerator::generateVolume(DataConfig cfg)
 
 		// as long as there are less elements added than requested
 		// try to add more elements
-		// ??TODO: wenn nach x Sekunden/Minuten kein weiteres passendes Center gefunden wird, gib die bereits hinzugefügten zurück oder Abbruch
-		// neuer Versuch mit neuem seed
+		// if there are as much elements found as requested within 15 seconds
+		// return the already found elements and move on from there
+		clock_t begin = clock();
 		while (i < cfg.numBodies)
 		{
+			if ((clock() - begin) == 15000.0) {
+				std::cout << "no proper center found within 15 seconds" << '\n' << "returning the already found centers" << std::endl;
+				break;
+			}
+
 			Vec3<double> center = addRandomElement(diameter / 2.0);
+			if (center.x == -1.0) break;
 
 			// check, if elements are overlapping
 			// if yes, drop current center and try a new one
@@ -210,33 +199,24 @@ int DataGenerator::generateVolume(DataConfig cfg)
 	// layout based on halton sequence
 	else if (cfg.randomBodyLayout == 2 && cfg.coverage < Vec3<double>(80.0)) {	
 		long long i = 0;
-		size_t baseX, baseY, baseZ;
 
 		// skip first 30 elements of the halton sequence for a better result
 		long long skip = 30;
 
-		// user can enter 3 prime bases for the halton sequence
-		/*std::cout << "\nPlease enter 3 prime bases" << std::endl;
-		std::cout << "First: " << std::endl;
-		do {
-			std::cin >> baseX;
-			if (!isPrime(baseX)) std::cout << baseX << " is not a prime number." << std::endl;
-		} while (!isPrime(baseX));
-		std::cout << "Second: " << std::endl;
-		do {
-			std::cin >> baseY;
-			if (!isPrime(baseY)) std::cout << baseY << " is not a prime number." << std::endl;
-		} while (!isPrime(baseY));
-		std::cout << "Third: " << std::endl;
-		do {
-			std::cin >> baseZ;
-			if (!isPrime(baseZ)) std::cout << baseZ << " is not a prime number." << std::endl;
-		} while (!isPrime(baseZ));*/
-
+		// as long as there are less elements added than requested
+		// try to add more elements
+		// if there are as much elements found as requested within 15 seconds
+		// return the already found elements and move on from there
+		clock_t begin = clock();
 		while (i < cfg.numBodies)
 		{
-			// add new elements with prime bases 7, 37, 97
-			Vec3<double> center = addHaltonElement(diameter / 2.0, 7, 37, 97, skip);
+			if ((clock() - begin) == 15000.0) {
+				std::cout << "no proper center found within 15 seconds" << '\n' << "returning the already found centers" << std::endl;
+				break;
+			}
+			// add new elements with prime bases 32257, 56519, 96479
+			Vec3<double> center = addHaltonElement(diameter / 2.0, 32257, 56519, 96479, skip);
+			if (center.x == -1.0) break;
 
 			// check, if elements are overlapping
 			// if yes, drop current center and try a new one
@@ -247,6 +227,9 @@ int DataGenerator::generateVolume(DataConfig cfg)
 				std::cout << "Added element " << i << "/" << cfg.numBodies << std::endl;
 			}
 		}
+	}
+	else if (cfg.randomBodyLayout == 3) {
+		return true;
 	}
 
 	// structured layout
@@ -292,7 +275,7 @@ int DataGenerator::generateVolume(DataConfig cfg)
 }
 
 
-int DataGenerator::generateScalarData(const DataConfig cfg)
+int DataGenerator::generateScalarData(const DataConfig &cfg)
 {
 	if (cfg.res.x < 1 || cfg.res.y < 1 || cfg.res.z < 1)
 	{
@@ -309,19 +292,8 @@ int DataGenerator::generateScalarData(const DataConfig cfg)
 	* mostly used for checking purposes for the user-defined function
 	* compare the selected function with the user-defined function
 	* and check if they match
-	*/
-	/*std::cout << "\n" << "Press the corresponding number to select \none of the following functions to generate a global frequency: \n"
-		<< "1: mag * (sin(frequency * coords) + 1.0) * 0.5 \n"
-		<< "2: mag * (sin(frequency * coords)^2 + 1.0) * 0.5 \n"
-		<< "3: mag * (e^(sin(frequency * coords)) / e + 1.0) * 0.5 \n"
-		<< "4: mag * (cos(frequency * coords) + 1.0) * 0.5 \n"
-		<< "5: mag * (cos(frequency * coords)^2 + 1.0) * 0.5 \n"
-		<< "6: mag * (e^(cos(frequency * coords)) / e + 1.0) * 0.5 \n" 
-		<< "7: mag * (cords % 6) < 3 ? 1 : -1 \n" 
-		<< "8: mag * abs((cords % 6) - 3) / 3.0" << std::endl;*/
-	int select{1};
-	//std::cin >> select;
-	switch (select) {
+	*
+	switch (_select) {
 		case 1: mptr = &Frequency::sine; break;
 		case 2: mptr = &Frequency::quadraticSine; break;
 		case 3: mptr = &Frequency::sineExp; break;
@@ -331,15 +303,7 @@ int DataGenerator::generateScalarData(const DataConfig cfg)
 		case 7: mptr = &Frequency::rect; break;
 		case 8: mptr = &Frequency::triangle; break;
 		default: mptr = &Frequency::sine; break;
-	}
-
-	Frequency freq;
-	Perlin perlin;
-
-	/// used for user-defined functions
-	//std::string str;
-	//std::cout << "Please enter a function." << std::endl;
-	//std::cin >> str;
+	}*/
 
 	// generate global frequency
 #pragma omp parallel for
@@ -352,18 +316,20 @@ int DataGenerator::generateScalarData(const DataConfig cfg)
 				long long id = dirX + dirY * cfg.res.x + dirZ * cfg.res.x * cfg.res.y;
 				// fill bodies with scalar data of defined frequency
 
-				/// used for perlin noise values
-				//double x = static_cast<double>(dirX) / static_cast<double>(cfg.res.x);
-				//double y = static_cast<double>(dirY) / static_cast<double>(cfg.res.y);
-				//double z = static_cast<double>(dirZ) / static_cast<double>(cfg.res.z);
-				//double noise = 10.0 * ((perlin.noise(Vec3<double>(x, y, z)) + 1.0) / 2.0);
-				//noise = noise - floor(noise);
-				//m_volData.at(id) = static_cast<float>(noise);
-
-				if (m_isShape.at(id))
+				// used for perlin noise values
+				if (cfg.randomBodyLayout == 3) {
+					double x = static_cast<double>(dirX) / static_cast<double>(cfg.res.x);
+					double y = static_cast<double>(dirY) / static_cast<double>(cfg.res.y);
+					double z = static_cast<double>(dirZ) / static_cast<double>(cfg.res.z);
+					//double noise = 10.0 * ((_perlin.noise(Vec3<double>(x, y, z)) + 1.0) / 2.0);
+					double noise = _perlin.noise(Vec3<double>(x, y, z)) * _freq.sine(Vec3<unsigned int>(dirX, dirY, dirZ), cfg.magnitude, cfg.frequency, cfg.res);
+					//noise = noise - floor(noise);
+					m_volData.at(id) = noise;
+				}
+				else if (m_isShape.at(id))
 				{		
 					// freq.*mptr points to the function selected above
-					m_volData.at(id) = (freq.*mptr)(Vec3<unsigned int>(dirX, dirY, dirZ), cfg.magnitude, cfg.frequency, cfg.res);
+					m_volData.at(id) = _freq.sine(Vec3<unsigned int>(dirX, dirY, dirZ), cfg.magnitude, cfg.frequency, cfg.res);
 				}
 			}
 		}

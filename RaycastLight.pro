@@ -80,3 +80,6 @@ RESOURCES += \
 DISTFILES += \
     kernels/volumeraycast.cl \
     style.qss
+
+#enable console
+CONFIG += console

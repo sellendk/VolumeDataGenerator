@@ -41,6 +41,7 @@
 #include <QVector4D>
 
 #include <datagenerator.hpp>
+#include <getSetData.hpp>
 
 namespace Ui {
 class MainWindow;
@@ -55,6 +56,9 @@ public:
     ~MainWindow();
 
 protected slots:
+	/// <summary>
+	/// Used for generating random volume data
+	/// </summary>
 	void randomData();
 
     void openVolumeFile();
@@ -74,8 +78,6 @@ protected:
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
 private:
-;
-	void setConfig();
     void setVolumeData(const QString &fileName);
     bool readVolumeFile(const QString &fileName);
 
@@ -85,6 +87,18 @@ private:
     void writeSettings();
 
     void setStatusText();
+
+	/// <summary>
+	/// Used for reading in configs from .xml oder .json files in MainWindow::openVolumeFile
+	/// if a config is read then this method stores it in _cfg
+	/// </summary>
+	void setConfig();
+
+	/// <summary>
+	/// Used for reading in configs from .xml oder .json files in MainWindow::openVolumeFile
+	/// if a config is read and stored in _cfg this method updates the values of the UI
+	/// </summary>
+	void setUI();
 
     // ----- Members -----
     Ui::MainWindow *ui;
@@ -98,6 +112,7 @@ private:
 
 	DataConfig _cfg;
 	DataGenerator _dataGenerator;
+	GetSetData _getSetData;
 };
 
 #endif // MAINWINDOW_H

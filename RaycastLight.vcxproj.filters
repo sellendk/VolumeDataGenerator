@@ -231,5 +231,7 @@
     <None Include="kernels\volumeraycast.cl" />
     <None Include="kernels\volumeraycast.cl" />
     <None Include="kernels\volumeraycast.cl" />
+    <None Include="kernels\volumeraycast.cl" />
+    <None Include="kernels\volumeraycast.cl" />
   </ItemGroup>
 </Project>

@@ -20,8 +20,6 @@
  *
  */
 
-//#define NO_GL
-
 #include "volumerendercl.h"
 
 #include <functional>
@@ -237,7 +235,7 @@ void VolumeRenderCL::updateOutputImg(const size_t width, const size_t height, GL
                                      width,
                                      height);
         _raycastKernel.setArg(OUTPUT, _outputMemNoGL);
-        _outputData.resize(width * height * 4, 0);
+        _outputData.resize(width * height * 4);
 #else
         _outputMem = cl::ImageGL(_contextCL,
                                  CL_MEM_WRITE_ONLY,
@@ -269,7 +267,7 @@ void VolumeRenderCL::runRaycast(const size_t width, const size_t height, const i
 #ifdef NO_GL
         _queueCL.enqueueNDRangeKernel(
                     _raycastKernel, cl::NullRange, globalThreads, cl::NullRange, NULL, &ndrEvt);
-        _outputData.resize(width*height*4);
+        _outputData.resize(width * height * 4);
         cl::Event readEvt;
         std::array<size_t, 3> origin = {{0, 0, 0}};
         std::array<size_t, 3> region = {{width, height, 1}};
@@ -341,7 +339,7 @@ void VolumeRenderCL::generateBricks()
     try
     {
         // calculate brick size
-        const unsigned int numBricks = 64u;
+		const unsigned int numBricks = 64u;
         std::array<unsigned int, 3> brickRes = {1u, 1u, 1u};
         brickRes.at(0) = RoundPow2(_dr.properties().volume_res.at(0)/numBricks);
         brickRes.at(1) = RoundPow2(_dr.properties().volume_res.at(1)/numBricks);
@@ -399,6 +397,7 @@ void VolumeRenderCL::volDataToCLmem(const std::vector<std::vector<unsigned char>
 {
     if (!_dr.has_data())
         return;
+
     try
     {
         cl::ImageFormat format;
@@ -415,7 +414,7 @@ void VolumeRenderCL::volDataToCLmem(const std::vector<std::vector<unsigned char>
         else
             throw std::invalid_argument("Unknown or invalid volume data format.");
 
-		if (!_volumesMem.empty()) _volumesMem.clear();
+		_volumesMem.clear();
 
 		for (const auto &v : volumeData)
 		{
@@ -428,6 +427,7 @@ void VolumeRenderCL::volDataToCLmem(const std::vector<std::vector<unsigned char>
 				0, 0,
 				(void *)v.data()));
 		}
+
     }
     catch (cl::Error err)
     {
@@ -479,7 +479,7 @@ int VolumeRenderCL::loadVolumeData(const std::string fileName)
 /**
 * @brief VolumeRenderCL::loadVolumeData
 */
-int VolumeRenderCL::loadRandomVolumeData(const DataConfig &cfg, std::vector<double> &data)
+int VolumeRenderCL::loadRandomVolumeData(const DataConfig &cfg, const std::vector<double> &data)
 {
 	this->_volLoaded = false;
 	try

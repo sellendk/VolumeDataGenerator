@@ -21,6 +21,7 @@
  */
 
 #include <datrawreader.h>
+#include <math.h>
 
 #include <iostream>
 #include <fstream>
@@ -29,12 +30,20 @@
 #include <iterator>
 #include <cassert>
 
+
+/*
+* DatRawReader::setRandomBoolean
+*/
+void DatRawReader::setRandomBoolean(bool randomBoolean) {
+	_prop.random = randomBoolean;
+}
+
 /*
 * DatRawReader::setProp
 */
 void DatRawReader::setData(const DataConfig &cfg, const std::vector<double> &data) {
-	std::vector<unsigned char> convert_uchar;
-	std::vector<unsigned short> convert_ushort;
+	setRandomBoolean(true);
+	
 	// set properties read from cfg
 	switch (cfg.precision) {
 	case 0: _prop.format = "UCHAR"; break;
@@ -46,38 +55,31 @@ void DatRawReader::setData(const DataConfig &cfg, const std::vector<double> &dat
 	_prop.volume_res = { cfg.res.x, cfg.res.y, cfg.res.z };
 	_prop.slice_thickness = { cfg.slice_thickness.x, cfg.slice_thickness.y , cfg.slice_thickness.z };
 
+	// converting the volume data to the desired precision
 	_raw_data.clear();
-	_raw_data_ushort.clear();
+	std::vector<unsigned char> convert;
+	convert.clear();
 
-	if (_prop.format.compare("UCHAR") == 0) {
+	if (_prop.format == "UCHAR") {
 		for (int i = 0; i < data.size(); ++i) {
-			//unsigned char conv = static_cast<unsigned char>(data[i]) * UCHAR_MAX;
-			convert_uchar.push_back(static_cast<unsigned char>(data[i] * static_cast<double>(UCHAR_MAX)));
+			convert.push_back(static_cast<unsigned char>(data[i] * static_cast<double>(UCHAR_MAX)));
 		}
-		_raw_data.push_back(convert_uchar);
-	}
-	else if (_prop.format.compare("USHORT") == 0) {
+		_raw_data.push_back(convert);
+	} else if (_prop.format == "USHORT") {
 		for (int i = 0; i < data.size(); ++i) {
-			convert_ushort.push_back(static_cast<unsigned short>(data[i] * static_cast<double>(USHRT_MAX)));
-			convert_uchar.push_back(static_cast<unsigned char>(data[i] * static_cast<double>(UCHAR_MAX)));
+			unsigned short convert_ushort = static_cast<unsigned short>(data[i] * static_cast<double>(USHRT_MAX));
+			convert.push_back(convert_ushort & 0xFF);
+			convert.push_back((convert_ushort >> 8) & 0xFF);
 		}
-		_raw_data_ushort.push_back(convert_ushort);
-		_raw_data.push_back(convert_uchar);
-	}
-	else if (_prop.format.compare("FLOAT") == 0) {
-		for (int i = 0; i < data.size(); ++i) {
-			convert_uchar.push_back(static_cast<float>(data[i] * static_cast<double>(FLT_MAX)));
-		}
-	}
-	else if(_prop.format.compare("DOUBLE") == 0) {
-		for (int i = 0; i < data.size(); ++i) {
-			convert_uchar.push_back(data[i]);
-		}
-	}
-	else { // default case: UCHAR
-		for (int i = 0; i < data.size(); ++i) {
-			convert_uchar.push_back(static_cast<unsigned char>(data[i] * static_cast<double>(UCHAR_MAX)));
-		}
+		_raw_data.push_back(convert);
+	} else if (_prop.format == "FLOAT") {
+		std::vector<float> convert_float;
+		for (int i = 0; i < data.size(); ++i)
+			convert_float.push_back(static_cast<float>(data[i] * static_cast<double>(FLT_MAX)));
+
+		const unsigned char *bytes = reinterpret_cast<const unsigned char *>(&convert_float[0]);
+		std::vector<unsigned char> check(bytes, bytes + sizeof(float) * data.size());
+		_raw_data.push_back(check);
 	}
 }
 
@@ -86,6 +88,8 @@ void DatRawReader::setData(const DataConfig &cfg, const std::vector<double> &dat
  */
 void DatRawReader::read_files(const std::string dat_file_name)
 {
+	setRandomBoolean(false);
+
     // check file
     if (!dat_file_name.empty())
         _prop.dat_file_name = dat_file_name;
@@ -111,7 +115,7 @@ void DatRawReader::read_files(const std::string dat_file_name)
  */
 bool DatRawReader::has_data() const
 {
-    return !(_raw_data.empty());
+    return (!(_raw_data.empty()) || _prop.random);
 }
 
 

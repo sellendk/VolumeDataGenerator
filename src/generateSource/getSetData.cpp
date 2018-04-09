@@ -128,7 +128,7 @@ bool GetSetData::getXMLConfig(const std::string &file, DataConfig &cfg, std::vec
 			switch (str2int(sib->name())) {
 			case str2int("Precision"): cfg.precision = std::stoi(sib->value()); break;
 
-			case str2int("Resolution"):cfg.res = Vec3<int>(std::stoi(sib->first_attribute()->value()),
+			case str2int("Resolution"):cfg.res = Vec3<unsigned int>(std::stoi(sib->first_attribute()->value()),
 				std::stoi(sib->first_attribute()->next_attribute()->value()),
 				std::stoi(sib->last_attribute()->value())); break;
 
@@ -139,20 +139,23 @@ bool GetSetData::getXMLConfig(const std::string &file, DataConfig &cfg, std::vec
 			case str2int("Shape"): if (strcmp(sib->value(), "cube") == 0) cfg.shape = cube;
 				if (strcmp(sib->value(), "sphere") == 0) cfg.shape = sphere; break;
 
-			case str2int("numBodies"): cfg.numBodies = std::stoll(sib->value()); break;
+			case str2int("numBodies"): cfg.numBodies = std::stoull(sib->value()); break;
 
-			case str2int("dimBodies"): cfg.dimBodies = Vec3<int>(std::stoi(sib->first_attribute()->value()),
+			case str2int("dimBodies"): cfg.dimBodies = Vec3<unsigned int>(std::stoi(sib->first_attribute()->value()),
 				std::stoi(sib->first_attribute()->next_attribute()->value()),
 				std::stoi(sib->last_attribute()->value())); break;
 
-			case str2int("randomBodyLayout"): if (strcmp(sib->value(), "false") == 0) cfg.randomBodyLayout = 0;
-				if (strcmp(sib->value(), "true") == 0) cfg.randomBodyLayout = 1; break;
+			case str2int("randomBodyLayout"): cfg.randomBodyLayout = std::stoi(sib->value()); break;
 
-			case str2int("Frequency"): cfg.frequency = Vec3<int>(std::stoi(sib->first_attribute()->value()),
+			case str2int("Frequency"): cfg.frequency = Vec3<unsigned int>(std::stoi(sib->first_attribute()->value()),
 				std::stoi(sib->first_attribute()->next_attribute()->value()),
 				std::stoi(sib->last_attribute()->value())); break;
 
 			case str2int("Magnitude"): cfg.magnitude = Vec3<double>(std::stod(sib->first_attribute()->value()),
+				std::stod(sib->first_attribute()->next_attribute()->value()),
+				std::stod(sib->last_attribute()->value())); break;
+
+			case str2int("SliceThickness"): cfg.slice_thickness = Vec3<double>(std::stod(sib->first_attribute()->value()),
 				std::stod(sib->first_attribute()->next_attribute()->value()),
 				std::stod(sib->last_attribute()->value())); break;
 
@@ -180,18 +183,19 @@ bool GetSetData::getJSONConfig(const std::string &file, DataConfig &cfg, std::ve
 		for (auto c : config) {
 			// case sensitive
 			cfg.precision = c["Precision"];
-			cfg.res = Vec3<int>(c["Resolution"][0], c["Resolution"][1], c["Resolution"][2]);
+			cfg.res = Vec3<unsigned int>(c["Resolution"][0], c["Resolution"][1], c["Resolution"][2]);
 			cfg.coverage = Vec3<double>(c["Coverage"][0], c["Coverage"][1], c["Coverage"][2]);
 
 			std::string s = c["Shape"];
 			if (strcmp(s.c_str(), "cube") == 0) cfg.shape = cube;
 			if (strcmp(s.c_str(), "sphere") == 0) cfg.shape = sphere;
 
-			cfg.numBodies = static_cast<long long>(c["numBodies"]);
-			cfg.dimBodies = Vec3<int>(c["dimBodies"][0], c["dimBodies"][1], c["dimBodies"][2]);
-			cfg.randomBodyLayout = c["randomBodyLayout"][0];
-			cfg.frequency = Vec3<int>(c["Frequency"][0], c["Frequency"][1], c["Frequency"][2]);
+			cfg.numBodies = static_cast<unsigned long long>(c["numBodies"]);
+			cfg.dimBodies = Vec3<unsigned int>(c["dimBodies"][0], c["dimBodies"][1], c["dimBodies"][2]);
+			cfg.randomBodyLayout = static_cast<unsigned char>(c["randomBodyLayout"]);
+			cfg.frequency = Vec3<unsigned int>(c["Frequency"][0], c["Frequency"][1], c["Frequency"][2]);
 			cfg.magnitude = Vec3<double>(c["Magnitude"][0], c["Magnitude"][1], c["Magnitude"][2]);
+			cfg.slice_thickness = Vec3<double>(c["Slice Thickness"][0], c["Slice Thickness"][1], c["Slice Thickness"][2]);
 
 			configs.push_back(cfg);
 

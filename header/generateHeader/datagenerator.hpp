@@ -1,11 +1,13 @@
 #ifndef DATAGENERATOR_HPP
 #define DATAGENERATOR_HPP
 
+#include "frequency.hpp"
+#include "Perlin.hpp"
+#include "vec3.hpp"
+
 #include <vector>
 #include <cmath>
 #include <iostream>
-
-#include "vec3.hpp"
 
 enum Shape { cube, sphere };
 
@@ -20,7 +22,7 @@ struct DataConfig
 	unsigned char precision;
 	Vec3<unsigned int> res;			// Volume data resolution x,y and z direction
 	Vec3<double> coverage;			// Percentage coverage in x,y and z direction.
-	Shape shape = cube;				// shape of the objects
+	Shape shape = sphere;			// shape of the objects
 	unsigned long long numBodies;	// number of disjunct bodies
 	Vec3<unsigned int> dimBodies;	// structured grid layout that is used when adding bodies structured
 	/**
@@ -35,9 +37,9 @@ struct DataConfig
 	Vec3<double> slice_thickness;	// slive thickness
 
 	// standard config
-	DataConfig() : precision{ 0 }, res{ 128, 128, 128 }, coverage{ 75.0, 75.0, 75.0 },
-		numBodies{ 7 }, dimBodies{ 3, 3, 3 }, randomBodyLayout{ 2 },
-		frequency{ 10, 10, 10 }, magnitude{ 0.3, 0.3, 0.3 }, slice_thickness{ 1.0, 1.0, 1.0 }
+	DataConfig() : precision{ 0 }, res{ 256, 256, 256 }, coverage{ 70.0, 70.0, 70.0 },
+		numBodies{ 114 }, dimBodies{ 7, 7, 7 }, randomBodyLayout{ 1 },
+		frequency{ 55, 13, 42 }, magnitude{ 0.3, 0.3, 0.3 }, slice_thickness{ 1.0, 1.0, 1.0 }
 	{
 	}
 };
@@ -53,7 +55,7 @@ public:
 	* @param prime the number to be checked
 	* @return true, if prime is a prime number, false otherwise
 	*/
-	bool isPrime(int prime);
+	bool isPrime(unsigned long prime);
 
 	/**
 	* Skip the first 30 Elements to avoid linear correlation
@@ -64,7 +66,7 @@ public:
 	* @param base the base used for the halton sequence
 	* @return r The i-th value of the halton sequence
 	*/
-	double Halton_Seq(int index, int base);
+	double Halton_Seq(int index, unsigned long base);
 
 	/**
 	* @brief Generate a volume data set with the given configuration.
@@ -79,7 +81,7 @@ public:
 	* @param cfg A data configuration object.
 	* @return true if data was generated successfully, false otherwise.
 	*/
-	int generateScalarData(const DataConfig cfg);
+	int generateScalarData(const DataConfig &cfg);
 
 
 	/**
@@ -103,6 +105,7 @@ protected:
 
 	/**
 	* @brief Add an element at a pseudorandom position inside the volume using.
+	*        If no proper center is found within 15 seconds, stop searching and return -1.0
 	* @param radius of the element generated
 	* @return the pseudorandom added element
 	*/
@@ -110,13 +113,14 @@ protected:
 
 	/**
 	* @brief Add an element at a random position inside the volume using the halton sequence.
+	*        If no proper center is found within 15 seconds, stop searching and return -1.0
 	* @param radius of the element generated
 	* @param baseX the base used for the X-value
 	* @param baseY the base used for the Y-value
 	* @param baseZ the base used for the Z-value
 	* @return the center of the halton element added
 	*/
-	Vec3<double> addHaltonElement(const Vec3<double> radius, int baseX, int baseY, int baseZ, long long &index);
+	Vec3<double> addHaltonElement(const Vec3<double> &radius, int baseX, int baseY, int baseZ, long long &index);
 
 	/**
 	* @brief addElementsStructured
@@ -127,6 +131,9 @@ protected:
 	std::vector<Vec3<double> > addElementsStructured(long long n, Vec3<int> dimBodies);
 
 private:
+	Frequency _freq;
+	Perlin _perlin;
+
 	// The current data configuration.
 	DataConfig m_cfg;
 
@@ -138,6 +145,9 @@ private:
 
 	// center position of all elements
 	std::vector<Vec3<double>> m_elementCenters;
+
+	// used for frequency functions
+	int _select = 1;
 };
 
 #endif // DATAGENERATOR_HPP

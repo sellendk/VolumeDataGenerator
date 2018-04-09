@@ -57,7 +57,11 @@ public:
 
     void setVolumeData(const QString &fileName);
 
-	void setRandomVolumeData(const DataConfig &cfg, std::vector<double> &data);
+	/**
+	* @brief the same a MainWindow::setVolumeData just without reading the data from a file
+	* but instead generating it randomly
+	*/
+	void setRandomVolumeData(const DataConfig &cfg, const std::vector<double> &data);
 
     bool hasData();
 

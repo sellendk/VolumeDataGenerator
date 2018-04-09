@@ -2,6 +2,7 @@
 #define FREQUENCY_HPP
 
 #include "vec3.hpp"
+#include <string>
 
 class Frequency
 {

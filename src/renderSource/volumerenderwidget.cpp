@@ -403,7 +403,7 @@ void VolumeRenderWidget::setVolumeData(const QString &fileName)
 /**
 * @brief VolumeRenderWidget::setRandomVolumeData
 */
-void VolumeRenderWidget::setRandomVolumeData(const DataConfig &cfg, std::vector<double> &data)
+void VolumeRenderWidget::setRandomVolumeData(const DataConfig &cfg, const std::vector<double> &data)
 {
 	this->_noUpdate = true;
 	int timesteps = _volumerender.loadRandomVolumeData(cfg, data);

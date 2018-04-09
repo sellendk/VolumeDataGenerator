@@ -90,7 +90,7 @@ public:
      * @param width The image width in pixels.
      * @param height The image height in pixels.
      */
-    void updateOutputImg(const size_t width, const size_t height, cl_GLuint texId);
+    void updateOutputImg(const size_t width, const size_t height, GLuint texId);
 
     /**
      * @brief Run the actual OpenCL volume raycasting kernel.
@@ -108,11 +108,12 @@ public:
     int loadVolumeData(const std::string fileName);
 
 	/**
-	* @brief Load volume data from a given .dat file name.
+	* @brief loading the generated volume data
 	* @param data The random volume data
+	* @param cfg The config with which the data was generated
 	* @return number of loaded volume time steps
 	*/
-	int loadRandomVolumeData(const DataConfig &cfg, std::vector<double> &data);
+	int loadRandomVolumeData(const DataConfig &cfg, const std::vector<double> &data);
 
     /**
      * @brief Answers if volume data has been loaded.
@@ -163,21 +164,25 @@ public:
      * @param setCamOrtho
      */
     void setCamOrtho(bool setCamOrtho);
+
     /**
      * @brief setIllumination
      * @param illum
      */
     void setIllumination(bool illum);
+
     /**
      * @brief setBoundingBox
      * @param boundingBox
      */
     void setBoundingBox(bool boundingBox);
+
     /**
      * @brief setLinearSampling
      * @param linearSampling
      */
     void setLinearInterpolation(bool linearSampling);
+
     /**
      * @brief setBackground
      * @param color
@@ -216,7 +221,7 @@ private:
      * @brief volDataToCLmem
      * @param volumeData
      */
-    void volDataToCLmem(const std::vector<std::vector<unsigned char> > &volumeData);
+	void volDataToCLmem(const std::vector<std::vector<unsigned char> > &volumeData);
 
     /**
      *
